@@ -18,7 +18,7 @@ LW      = 3.1;
 AXLW    = 0.3;
 FSaxis  = 20;
 FSlabel = 20;
-FSleg   = 14;
+FSleg   = 16;
 
 for i = 1:5
    
@@ -37,7 +37,7 @@ for i = 1:5
     xlabel('Time (s)','Interpreter','latex','FontSize',FSlabel);
     ylabel(ylabel_latex{i},'Interpreter','latex','FontSize',FSlabel);
 
-    legend('True','EKF','UKF','Location','east', ...
+    legend('Optimal','EKF','UKF','Location','east', ...
            'Interpreter','latex','FontSize',FSleg);
 
     set(gca,'TickLabelInterpreter','latex');

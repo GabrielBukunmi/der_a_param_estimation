@@ -22,7 +22,7 @@ LW      = 3.1;
 AXLW    = 0.3;
 FSaxis  = 20;
 FSlabel = 20;
-FSleg   = 14;
+FSleg   = 16;
 
 for i = 1:6
    
@@ -46,7 +46,7 @@ for i = 1:6
         ylabel(ylabel_disp{i},'Interpreter','none','FontSize',FSlabel);
     end
 
-    legend('True','EKF','UKF','Location','east', ...
+    legend('Optimal','EKF','UKF','Location','east', ...
            'Interpreter','latex','FontSize',FSleg);
 
     set(gca,'TickLabelInterpreter','latex');
