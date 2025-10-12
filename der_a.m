@@ -141,11 +141,6 @@ Q800pu_dq0  = (3/2) .* Vmag_800_pu .* Imag_800_pu .* sin(Vang_800_rad - Iang_800
 P802pu_dq0 = (3/2) .* Vmag_802_pu .* Imag_802_pu .* cos(Vang_802_rad - Iang_802_rad);
 Q802pu_dq0 = (3/2) .* Vmag_802_pu .* Imag_802_pu .* sin(Vang_802_rad - Iang_802_rad);
 
-% % Power plots
-% figure 
-% subplot(1,2,1); plot(t, P800pu_simu,'k-'); hold on; plot(t, P800pu_dq0,'r--'); legend('P from Simulink pos. seq. block (pu)','P calculated in MATLAB pos. seq. (pu)')
-% subplot(1,2,2); plot(t, Q800pu_simu,'k-'); hold on; plot(t, Q800pu_dq0,'r--'); legend('Q from Simulink pos. seq. block (pu)','Q calculated in MATLAB pos. seq. (pu)')
-% sgtitle('Comparison of Simulink vs. MATLAB Positive Sequence Power (P & Q) at Bus 800')
 
 %% 
 
@@ -212,9 +207,9 @@ p = struct(...                   % Reference: 2023 - NERC - Parameterization of 
     'vl0'      ,  0.8      , ... % voltage break-point for low voltage cut-out of inverters
     'vl1'      ,  0.91     , ... % voltage break-point for low voltage cut-out of inverters
     'Vpr'      ,  0.7      , ... % voltage below which frequency tripping is disabled
-    'Vref'     ,  0.9     , ... % voltage reference set-point > 0 (pu)
+    'Vref'     ,  1.07     , ... % voltage reference set-point > 0 (pu)
     'Vrfrac'   ,  0.6      , ... % fraction of device that recovers after voltage comes back to within vl1 < V < vh1
-    'Xe'       ,  0.009      ,  ... % source impedance reactive > 0 (pu)
+    'Xe'       ,  0.02      ,  ... % source impedance reactive > 0 (pu)
     'pfaref'   ,  0.87   ,    ... % power factor reference for when Pflag=1
     'PQflag'    , 0 ,....    % 0 for Q-priority and 1 for P priority
     'typeflag' , 0 .....      %TypeFlag: 0 means the unit is a storage device and Ipmin = - Ipmax; 1 means the unit is a generator Ipmin = 0 (any number which is not 0 is treated as 1)
@@ -225,7 +220,7 @@ Vpu   = Vmag_802_pu(1);
 Ipu   = Imag_802_pu(1);
 Vang  = Vang_802_rad(1);
 Iang  = Iang_802_rad(1);
-
+%% 
 
 
 % State initialization
@@ -237,15 +232,11 @@ s2_0 = Q_total(1);
 s3_0 = aux_fcn_SSF(s2_0-aux_fcn_SSF(aux_fcn_Iqv(p,s0_0),p.Iqh1,p.Iql1,p.k),p.Iqmax,p.Iqmin,p.k);%iq_est(2)
 s4_0 = TripVoltageLogic(t(1), s0_0, p.vl0, p.vl1, p.vh0, p.vh1, p.Vrfrac, p.tvl1, p.tvl0, p.tvh1, p.tvh0);
 s5_0 = f_802(1) / Fbase;
-
-% The initialization of s6 requires an iterative numerical method
 x(2) = s1_0; 
 x(6) = s5_0; 
-x(7) = 0.2; % Initial guess for s6_0
+x(7) = 0.2; 
 x_updated = solveForS6_0(p, x);
 s6_0 = x_updated(7);
-
-
 % Ip estimate from current
 x(1) = s0_0;  
 x(9) = s8_0;
@@ -279,7 +270,6 @@ initial_values = [
     s9_0;
 ];
 
-
 x0 = [
     s0_0;
     s1_0;
@@ -295,7 +285,6 @@ x0 = [
 
 F = @(t, x, k) dera_indexed(t, x, p, Vmag_802_pu, P_total, Q_total, f_802, k);
 
-% Run fixed-step solver
 sol = fixed_step_solver(F, x0, t);
 sol.Time = sol.t;
 sol.Solution = sol.X;
@@ -304,9 +293,9 @@ sol.Solution = sol.X;
 scale = 1/10;
 %% GRID INTERFACE SECTION 
 % === Extract DER_A outputs ===
-Id_series = sol.Solution(10, :);  % Ip = active current (pu)
+Id_series = sol.Solution(10, :); 
 Iq_series = sol.Solution(4, :);
-IqPFC_series = sol.Solution(3, :);% Iq = reactive current (pu)
+IqPFC_series = sol.Solution(3, :);
 Vt_series = sol.Solution(1, :); 
 Pgen_series = sol.Solution(8, :);% Generated Power(pu)
 
@@ -334,8 +323,7 @@ for k = 1:length(Id_series)
     Qsim_series(k) =  Vt_calculated(k)*Iq;
 end
 
-% 
-% === Save simulated results for this case ===
+%
 save('DERA_NERC_results.mat', 't', 'Psim_series', 'Qsim_series');
 
 
@@ -382,7 +370,7 @@ nMarkers = 45;
 idxP = round(linspace(1, numel(Snerc.t), nMarkers));
 idxQ = round(linspace(1, numel(Snerc.t), nMarkers));
 
-fig = figure('Name','Fig8 - Power (pu/10)');
+fig = figure('Name','Fig8 - Power ');
 
 subplot(2,1,1); hold on; grid on
 plot(t,       P_meas, 'k-',  'LineWidth', 1.7);                          
@@ -398,7 +386,7 @@ plot(Snerc.t, Q_NERC, 'b--o','LineWidth', 1.6, ...
     'MarkerIndices', idxQ, 'MarkerSize', 2, 'MarkerFaceColor','b');
 plot(Scal.t,  Q_CAL,  'r-.', 'LineWidth', 1.6);
 xlabel('Time (s)'); ylabel('Reactive Power (pu)');
-sgtitle('Comparison of Measured, NERC, and Estimated Active/Reactive Power')
+
 
 
 exportgraphics(fig, 'power_comparison_combined.pdf', 'ContentType','vector');

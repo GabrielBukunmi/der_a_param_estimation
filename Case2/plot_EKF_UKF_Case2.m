@@ -33,7 +33,6 @@ for i = 1:6
     ax.FontSize  = FSaxis;
     ax.LineWidth = AXLW;
 
-    plot(t_plot_long, true_states(i+8,1:Nt-1), 'k-',  'LineWidth', LW);
     plot(t_plot_long, EKF_estimates(i+8,1:Nt-1),  'b:', 'LineWidth', LW);
     plot(t_plot_long, UKF_estimates(i+8,1:Nt-1),  'r--','LineWidth', LW);
 
@@ -46,7 +45,7 @@ for i = 1:6
         ylabel(ylabel_disp{i},'Interpreter','none','FontSize',FSlabel);
     end
 
-    legend('Optimal','EKF','UKF','Location','east', ...
+    legend('EKF','UKF','Location','east', ...
            'Interpreter','latex','FontSize',FSleg);
 
     set(gca,'TickLabelInterpreter','latex');

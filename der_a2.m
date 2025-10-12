@@ -1,4 +1,4 @@
-%% Pflag =0 Vtrfl=0 Freqflag =1
+%% Pflag =1 Vtrfl=0 Freqflag =1
 
 clear; close all; clc
 addpath(genpath('./util'))
@@ -9,10 +9,9 @@ addpath(genpath('./util'))
   load('der_a_DATA.mat')
 t = Vmag_800.Time;
 
-% === Step 2: Remove duplicate timestamps ===
+
 [t_unique, unique_idx] = unique(t, 'stable');
 
-% === Step 3: Apply unique indices to all signals ===
 Vmag_800 = Vmag_800.Data(unique_idx);
 Vmag_802 = Vmag_802.Data(unique_idx);
 Imag_800 = Imag_800.Data(unique_idx);
@@ -46,8 +45,8 @@ Q_PV_850 = Q_PV_850.Data(unique_idx);
 
 t = t_unique;  % Assign cleaned time vector
 
-% === Step 4: Now trim from t >= 0.2 seconds ===
-start_idx = find(t >= 0.2, 1);
+
+start_idx = find(t >= 0.001, 1);
 
 t = t(start_idx:end);
 Vmag_800 = Vmag_800(start_idx:end);
@@ -100,31 +99,6 @@ Vang_802_rad = Vang_802 * pi/180;
 Iang_800_rad = Iang_800 * pi/180;
 Iang_802_rad = Iang_802 * pi/180;
 
-% positive sequence plots
-figure % plot 1
-subplot(2,2,1); plot(t, Vmag_800); hold on; plot(t, Vmag_802); legend('Vmag 800 (kV)','Vmag 802 (kV)')
-subplot(2,2,2); plot(t, Vang_800); hold on; plot(t, Vang_802); legend('Vang 800 (deg)','Vang 802 (deg)')
-subplot(2,2,3); plot(t, Vmag_800 - Vmag_802); legend('Subtraction: Vmag 800 - Vmag 802 (kV)')
-subplot(2,2,4); plot(t, Vang_800 - Vang_802); legend('Subtraction: Vang 800 - Vang 802 (deg)')
-
-figure % plot 2
-subplot(2,2,1); plot(t, Vmag_800_pu);  hold on; plot(t, Vmag_802_pu);  legend('Vmag 800 (pu)','Vmag 802 (pu)')
-subplot(2,2,2); plot(t, Vang_800_rad); hold on; plot(t, Vang_802_rad); legend('Vang 800 (rad)','Vang 802 (rad)')
-subplot(2,2,3); plot(t, Vmag_800_pu  - Vmag_802_pu);  legend('Subtraction: Vmag 800 - Vmag 802 (pu)')
-subplot(2,2,4); plot(t, Vang_800_rad - Vang_802_rad); legend('Subtraction: Vang 800 - Vang 802 (rad)')
-
-figure % plot 3
-subplot(2,2,1); plot(t, Imag_800); hold on; plot(t, Imag_802); legend('Imag 800 (A)','Imag 802 (A)')
-subplot(2,2,2); plot(t, Iang_800); hold on; plot(t, Iang_802); legend('Iang 800 (deg)','Iang 802 (deg)')
-subplot(2,2,3); plot(t, Imag_800 - Imag_802); legend('Subtraction: Imag 800 - Imag 802 (A)')
-subplot(2,2,4); plot(t, Iang_800 - Iang_802); legend('Subtraction: Iang 800 - Iang 802 (deg)')
-
-figure % plot 4
-subplot(2,2,1); plot(t, Imag_800_pu);  hold on; plot(t, Imag_802_pu);  legend('Imag 800 (pu)','Imag 802 (pu)')
-subplot(2,2,2); plot(t, Iang_800_rad); hold on; plot(t, Iang_802_rad); legend('Iang 800 (rad)','Iang 802 (rad)')
-subplot(2,2,3); plot(t, Imag_800_pu  - Imag_802_pu);  legend('Subtraction: Imag 800 - Imag 802 (pu)')
-subplot(2,2,4); plot(t, Iang_800_rad - Iang_802_rad); legend('Subtraction: Iang 800 - Iang 802 (rad)')
-
 % dq0 data in per unit
 Vd_800_pu = Vdq0_800(:,1) ./ Vbase;
 Vq_800_pu = Vdq0_800(:,2) ./ Vbase;
@@ -142,14 +116,6 @@ Id_802_pu = Idq0_802(:,1) ./ Ibase;
 Iq_802_pu = Idq0_802(:,2) ./ Ibase;
 I0_802_pu = Idq0_802(:,3) ./ Ibase;
 
-% dq0 plots
-figure % plot 5
-subplot(2,3,1); plot(t, Vd_800_pu); legend('Vd 800 (pu)')
-subplot(2,3,2); plot(t, Vq_800_pu); legend('Vq 800 (pu)')
-subplot(2,3,3); plot(t, V0_800_pu); legend('V0 800 (pu)')
-subplot(2,3,4); plot(t, Vd_802_pu); legend('Vd 802 (pu)')
-subplot(2,3,5); plot(t, Vq_802_pu); legend('Vq 802 (pu)')
-subplot(2,3,6); plot(t, V0_802_pu); legend('V0 802 (pu)')
 
 % dq0 voltages and currents
 V_800_pu  = Vd_800_pu + 1i * Vq_800_pu;
@@ -168,26 +134,10 @@ I_802_pu  = Id_802_pu + 1i * Iq_802_pu;
 I_802_mag = abs(I_802_pu);
 I_802_ang = angle(I_802_pu);
 
-% dq0 vs. positive sequence plots
-figure % plot 6
-subplot(2,3,1); plot(t, V_800_mag); hold on; plot(t, Vmag_800_pu); legend('Vmag800 dq0 (pu)','Vmag800 pos. seq. (pu)')
-subplot(2,3,2); plot(t, V_800_mag - Vmag_800_pu); legend('Subtraction: Vmag800 dq0 - Vmag800 pos. seq. (pu)')
-subplot(2,3,3); plot(t, V_802_mag - Vmag_802_pu); legend('Subtraction: Vmag802 dq0 - Vmag802 pos. seq. (pu)')
-subplot(2,3,4); plot(t, I_800_mag); hold on; plot(t, Imag_800_pu); legend('Imag800 dq0 (pu)','Imag800 pos. seq. (pu)')
-subplot(2,3,5); plot(t, I_800_mag - Imag_800_pu); legend('Subtraction: Imag800 dq0 - Imag800 pos. seq. (pu)')
-subplot(2,3,6); plot(t, I_802_mag - Imag_802_pu); legend('Subtraction: Imag802 dq0 - Imag802 pos. seq. (pu)')
-
-figure % plot 7
-subplot(2,3,1); plot(t, V_800_ang); hold on; plot(t, Vang_800_rad); legend('Vang800 dq0 (rad)','Vang800 pos. seq. (rad)')
-subplot(2,3,2); plot(t, V_800_ang - Vang_800_rad); legend('Subtraction: Vang800 dq0 - Vang800 pos. seq. (rad)')
-subplot(2,3,3); plot(t, V_802_ang - Vang_802_rad); legend('Subtraction: Vang802 dq0 - Vang802 pos. seq. (rad)')
-subplot(2,3,4); plot(t, I_800_ang); hold on; plot(t, Iang_800_rad); legend('Iang800 dq0 (rad)','Iang800 pos. seq. (rad)')
-subplot(2,3,5); plot(t, I_800_ang - Iang_800_rad); legend('Subtraction: Iang800 dq0 - Iang800 pos. seq. (rad)')
-subplot(2,3,6); plot(t, I_802_ang - Iang_802_rad); legend('Subtraction: Iang802 dq0 - Iang802 pos. seq. (rad)')
 
 % Power
-P800pu_simu = P_800 ./ Sbase; % from Simulink P/Q measurement block (pos. seq.)
-Q800pu_simu = Q_800 ./ Sbase; % from Simulink P/Q measurement block (pos. seq.)
+P800pu_simu = P_800 ./ Sbase; 
+Q800pu_simu = Q_800 ./ Sbase; 
 P800pu_dq0  = (3/2) .* Vmag_800_pu .* Imag_800_pu .* cos(Vang_800_rad - Iang_800_rad);
 Q800pu_dq0  = (3/2) .* Vmag_800_pu .* Imag_800_pu .* sin(Vang_800_rad - Iang_800_rad);
 
@@ -195,32 +145,18 @@ Q800pu_dq0  = (3/2) .* Vmag_800_pu .* Imag_800_pu .* sin(Vang_800_rad - Iang_800
 P802pu_dq0 = (3/2) .* Vmag_802_pu .* Imag_802_pu .* cos(Vang_802_rad - Iang_802_rad);
 Q802pu_dq0 = (3/2) .* Vmag_802_pu .* Imag_802_pu .* sin(Vang_802_rad - Iang_802_rad);
 
-
-% Power plots
-figure % plot 8
-subplot(1,2,1); plot(t, P800pu_simu,'k-'); hold on; plot(t, P800pu_dq0,'r--'); legend('P from Simulink pos. seq. block (pu)','P calculated in MATLAB pos. seq. (pu)')
-subplot(1,2,2); plot(t, Q800pu_simu,'k-'); hold on; plot(t, Q800pu_dq0,'r--'); legend('Q from Simulink pos. seq. block (pu)','Q calculated in MATLAB pos. seq. (pu)')
-
-%% 
-
 % Sum
 P_total = (P_PV_824 + P_PV_842 + P_PV_850 + P_PV_832 + P_PV_840)/100;
 Q_total = (Q_PV_824 + Q_PV_842 + Q_PV_850 + Q_PV_832 + Q_PV_840)/100;
 
 
-
-
-figure % plot 3 – total PV active and reactive power
-subplot(2,1,1); plot(t, P_total, 'LineWidth', 1.2); title('Total PV Active Power'); ylabel('P_{total} (kW)'); grid on
-subplot(2,1,2); plot(t, Q_total, 'LineWidth', 1.2); title('Total PV Reactive Power'); ylabel('Q_{total} (kVAR)'); grid on
-xlabel('Time (s)');
 %% 
 
 
 % Define DER-A parameters 
 p = struct(...                   % Reference: 2023 - NERC - Parameterization of the DER_A Model for Aggregate DER.pdf
-    'dbd1'     , -0.5     , ... % lower voltage deadband ≤ 0 (pu)
-    'dbd2'     ,  0.5     , ... % upper voltage deadband ≥ 0 (pu)
+    'dbd1'     , -0.12     , ... % lower voltage deadband ≤ 0 (pu)
+    'dbd2'     ,  0.01     , ... % upper voltage deadband ≥ 0 (pu)
     'Ddn'      , 20      , ... % frequency control droop gain ≥ 0 (down-side)
     'dpmax'    ,  35      , ... % power ramp rate up > 0 (pu/s)
     'dpmin'    , -35      , ... % power ramp rate down < 0 (pu/s)
@@ -243,8 +179,8 @@ p = struct(...                   % Reference: 2023 - NERC - Parameterization of 
     'Iqmax'    ,  4.0      , ... % maximum limit of total reactive current
     'Iqmin'    , -4.0     , ... % minimum limit of total reactive current
     'k'        ,  1024     , ... % smoothing factor
-    'kig'      ,  10       , ... % active power control integral gain
-    'kpg'      ,  0.1      , ... % active power control proportional gain
+    'kig'      ,  9.97       , ... % active power control integral gain
+    'kpg'      ,  0.5      , ... % active power control proportional gain
     'kqv'      ,  5       , ... % proportional voltage control gain (pu/pu)
     'kw'       ,  10      , ... % time constant for anti-windup (algbraic)
     'Pmax'     ,   9       , ... % maximum power (pu)
@@ -259,24 +195,24 @@ p = struct(...                   % Reference: 2023 - NERC - Parameterization of 
     'Tg'       ,  0.02     , ... % current control time constant
     'Tiq'      ,  0.02     , ... % Q control time constant (s)
     'Tp'       ,  0.02    , ... % transducer time constant (s)
-    'Tpord'    ,  0.025     , ... % power order time constant (s)
-    'Trf'      ,  0.017     , ... % transducer time constant (seconds) for frequency measurement (> 0)  
-    'Trv'      ,  0.03     , ... % transducer time constant (s) for voltage measurement
-    'Ts'       ,  0.02     , ... % Evaluation time of input signal (created by the author of the paper for simplification purposes)
+    'Tpord'    ,  0.02     , ... % power order time constant (s)
+    'Trf'      ,  0.03     , ... % transducer time constant (seconds) for frequency measurement (> 0)  
+    'Trv'      ,  0.02     , ... % transducer time constant (s) for voltage measurement
+    'Ts'       ,  0.03     , ... % Time step signal
     'Tv'       ,  0.02     , ... % time constant on the output of the voltage/frequency cut-out
-    'tvh0'     ,  1.5     , ... % timer for vh0 point
-    'tvh1'     ,  1.5        , ... % timer for vh1 point
-    'tvl0'     ,  1.5     , ... % timer for vl0 point
+    'tvh0'     ,  0.16     , ... % timer for vh0 point
+    'tvh1'     ,  0.16        , ... % timer for vh1 point
+    'tvl0'     ,  0.16     , ... % timer for vl0 point
     'tvl1'     ,  2        , ... % timer for vl1 point
     'vh0'      ,  1      , ... % voltage break-point for high voltage cut-out of inverters
     'vh1'      ,  1.05     , ... % voltage break-point for high voltage cut-out of inverters
     'vl0'      ,  0.8      , ... % voltage break-point for low voltage cut-out of inverters
     'vl1'      ,  0.91     , ... % voltage break-point for low voltage cut-out of inverters
-    'Vpr'      ,  0.9      , ... % voltage below which frequency tripping is disabled
-    'Vref'     ,  0.9     , ... % voltage reference set-point > 0 (pu)
+    'Vpr'      ,  1.05      , ... % voltage below which frequency tripping is disabled
+    'Vref'     ,  0.7     , ... % voltage reference set-point > 0 (pu)
     'Vrfrac'   ,  0.6      , ... % fraction of device that recovers after voltage comes back to within vl1 < V < vh1
-    'Xe'       ,  0.005      ,  ... % source impedance reactive > 0 (pu)
-    'pfaref'   ,  0.87   ,    ... % power factor reference for when Pflag=1
+    'Xe'       ,  0.2      ,  ... % source impedance reactive > 0 (pu)
+    'pfaref'   ,  0.9   ,    ... % power factor reference for when Pflag=1
     'PQflag'    , 0 ,....    % 0 for Q-priority and 1 for P priority
     'typeflag' , 0 .....      %TypeFlag: 0 means the unit is a storage device and Ipmin = - Ipmax; 1 means the unit is a generator Ipmin = 0 (any number which is not 0 is treated as 1)
     );
@@ -299,16 +235,11 @@ s3_0 = aux_fcn_SSF(s2_0-aux_fcn_SSF(aux_fcn_Iqv(p,s0_0),p.Iqh1,p.Iql1,p.k),p.Iqm
 s4_0 = TripVoltageLogic(t(1), s0_0, p.vl0, p.vl1, p.vh0, p.vh1, p.Vrfrac, p.tvl1, p.tvl0, p.tvh1, p.tvh0);
 s5_0 = f_802(1) / Fbase;
 
-% The initialization of s6 requires an iterative numerical method
 x(2) = s1_0; 
 x(6) = s5_0; 
 x(7) = 0.2; % Initial guess for s6_0
 x_updated = solveForS6_0(p, x);
 s6_0 = x_updated(7);
-
-
-% Ip estimate from current
-% Ip estimate from current
 x(1) = s0_0;  
 x(9) = s8_0;
 s9_0 = solveForS9_0(p,x);
@@ -336,55 +267,25 @@ sol = fixed_step_solver(F, x0, t);
 sol.Time = sol.t;
 sol.Solution = sol.X;
 
-
-pl(sol) % plot solution
-
-% Extract the final values (last row) of the solution matrix
-finalValues = sol.Solution(:,end);
-
-% Display final values of each state variable
-disp('Final values of the state variables at all flags =0:')
-for i = 1:length(finalValues)
-    fprintf('state var %2d: %8.4f\n',i,finalValues(i))
-end
-
-%
-
-
+scale=1/10;
 
 %% GRID INTERFACE SECTION 
-% === Extract DER_A outputs ===
-Id_series = sol.Solution(10, :);  % Ip = active current (pu)
+
+Id_series = sol.Solution(10, :);  
 Iq_series = sol.Solution(4, :);
-IqPFC_series = sol.Solution(3, :);% Iq = reactive current (pu)
+IqPFC_series = sol.Solution(3, :);
 Vt_series = sol.Solution(1, :); 
-Pgen_series = sol.Solution(8, :);% Generated Power(pu)
+Pgen_series = sol.Solution(8, :);
 
-
-%Simulation results
 Vt_sim = Vt_series;
 Psim_series = zeros(size(Id_series));
 Qsim_series = zeros(size(Iq_series));
 
-
-% for k = 1:length(Id_series)
-%     Vd = Vt_series(k);  
-%     Id = Id_series(k);
-%     Iq = Iq_series(k);
-%     Pgen =Pgen_series(k);
-% 
-%     Psim_series(k) = Pgen;
-%     Qsim_series(k) =  Vd * Iq;
-% end
-
- %calculate V or alternatively comment 410 -427 and uncomment 400 - 407 
 Vt_calculated = zeros(size(Id_series));
 for k = 1:length(Id_series)
     Id = Id_series(k);
     Iq = Iq_series(k);  
    Vd = Vt_series(k); 
-
-    % Calculate Ed and Eq
     Eq = 0 + Id*p.Xe;
     Ed = Vt_sim(k)-Iq * p.Xe;
 
@@ -396,48 +297,54 @@ for k = 1:length(Id_series)
     Qsim_series(k) =  Vt_calculated(k) * Iq;
 end
 
-% 
-%% Voltage Comparison Plot
-figure; hold on;
-plot(t, Vt_calculated, 'r-', 'LineWidth', 1.5);
-plot(t, Vmag_802_pu, 'k:', 'LineWidth', 2);
-legend('Simulated', 'Measured', 'Location', 'Best');
-xlabel('Time (s)'); ylabel('Voltage (pu)');
-title('Voltage Comparison: Simulated vs Measured'); grid on;
+ save('DERA_NERC_results2.mat', 't', 'Psim_series', 'Qsim_series');
+
+%% 
+
+Snerc = load('DERA_NERC_results2.mat');
+Scal  = load('DERA_CAL_results2.mat');
 
 
-%% Active Power Comparison Plot
-figure; hold on;
-plot(t, Psim_series, 'r-', 'LineWidth', 1.5);
-plot(t, P_total, 'k:', 'LineWidth', 2);
-legend('Simulated', 'Measured', 'Location', 'Best');
-xlabel('Time (s)'); ylabel('Active Power (pu)');
-title('Active Power Comparison: Simulated vs Measured'); grid on;
+P_meas = P_total*scale;      Q_meas = Q_total*scale;
+P_NERC = Snerc.Psim_series*scale;  Q_NERC = Snerc.Qsim_series*scale;
+P_CAL  = Scal.Psim_series*scale;   Q_CAL  = Scal.Qsim_series*scale;
 
+nMarkers = 45;
+idxP = round(linspace(1, numel(Snerc.t), nMarkers));
+idxQ = round(linspace(1, numel(Snerc.t), nMarkers));
 
-%% Reactive Power Comparison Plot
-figure; hold on;
-plot(t, Qsim_series, 'r-', 'LineWidth', 1.5);
-plot(t, Q_total, 'k:', 'LineWidth', 2);
-legend('Simulated', 'Measured', 'Location', 'Best');
+fig = figure('Name','powercomparison_case2');
+
+subplot(2,1,1); hold on; grid on
+plot(t,       P_meas, 'k-',  'LineWidth', 1.7);                          
+plot(Snerc.t, P_NERC, 'b--o','LineWidth', 1.6, ...                       
+    'MarkerIndices', idxP, 'MarkerSize', 2, 'MarkerFaceColor','b');
+plot(Scal.t,  P_CAL,  'r-.', 'LineWidth', 1.6);                        
+ylabel('Active Power (pu)');
+legend('Test system', 'NERC values', 'Estimated values', 'Location', 'northeast');
+
+subplot(2,1,2); hold on; grid on
+plot(t,       Q_meas, 'k-',  'LineWidth', 1.7);
+plot(Snerc.t, Q_NERC, 'b--o','LineWidth', 1.6, ...
+    'MarkerIndices', idxQ, 'MarkerSize', 2, 'MarkerFaceColor','b');
+plot(Scal.t,  Q_CAL,  'r-.', 'LineWidth', 1.6);
 xlabel('Time (s)'); ylabel('Reactive Power (pu)');
-title('Reactive Power Comparison: Simulated vs Measured'); grid on;
 
 
-%% % Model configurations
-% --- Pflag=0 and Vtrfl=0 and Freqflag=0 ---
-% Using fixed solver to avoid interpolation because default ode45 expects a
-% continuous signal and our input data isn't continuous
+exportgraphics(fig, 'power_comparison_combined2.pdf', 'ContentType','vector');
+
+%% 
+
 function sol = fixed_step_solver(Fun, x0, t)
     N = length(t);
-    dt = t(2) - t(1);  % assume uniform
+    dt = t(2) - t(1); 
     nx = length(x0);
 
     X = zeros(nx, N);
     X(:,1) = x0;
 
     for k = 2:N
-        dx = Fun(t(k-1), X(:,k-1), k-1);  % k-1 because MATLAB is 1-based
+        dx = Fun(t(k-1), X(:,k-1), k-1);  
         X(:,k) = X(:,k-1) + dt * dx;
     end
 
@@ -449,16 +356,10 @@ end
 
 function dx = dera_indexed(~, x, p, Vmag, P, Q, f, k)
     dx = zeros(10, 1);
-
-    % Inputs at time step k
     Vt_now    = Vmag(k);
     Pref_now  = P(k);
     Qref_now  = Q(k);
     freq_now  = f(k) / 60;
-
- 
-
-    % Compute RHS of each state
     dx(1) = -1/p.Trv * x(1) + 1/p.Trv * Vt_now;                                                             % s0
     dx(2) = -1/p.Tp  * x(2) + 1/p.Tp  * aux_fcn_SSF(x(9), p.Pmax, p.Pmin, p.k);                         % s1
     dx(3) = -1/p.Tiq * x(3) + 1/p.Tiq * Qref_now/ aux_fcn_SSF(x(1), p.inf, 0.01, p.k);                 % s2
@@ -477,24 +378,4 @@ function dx = dera_indexed(~, x, p, Vmag, P, Q, f, k)
 
     dx(10) = (1/p.Tg * aux_fcn_SSF(aux_fcn_Idpre(p, x), p.Idmax, p.Idmin, p.k) - 1/p.Tg * x(10));                                                                        % s9
 end
-
-
-
-
-
-% function dx_s9 = do_s9_piecewise(p,x)
-%     Ip_now = x(10);
-%     expr_s9 = (1/p.Tg)*aux_fcn_SSF(aux_fcn_Idpre(p,x), p.Idmax, p.Idmin, p.k) ...
-%               - (1/p.Tg)*Ip_now;
-% 
-%     if Ip_now >= 0
-%         upperLimit = p.rrpwr;
-%         lowerLimit = p.neg_inf;
-%     else
-%         upperLimit = p.inf;
-%         lowerLimit = -p.rrpwr;
-%     end
-% 
-%     dx_s9 = aux_fcn_SSF(expr_s9, upperLimit, lowerLimit, p.k);
-% end
 

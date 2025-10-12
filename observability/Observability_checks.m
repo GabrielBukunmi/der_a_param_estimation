@@ -38,7 +38,7 @@ dpmax = x(18); dpmin = x(19); dbd1 = x(20); dbd2 = x(21);
 Iqmax = x(22); Iqmin = x(23);
 
 % Constants
-Ts = 0.02;
+Ts = 0.033;
 kw = 10;
 
 %% 

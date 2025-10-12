@@ -1,10 +1,8 @@
-%% % Model configurations
-% --- Pflag=0 and Vtrfl=0 and Freqflag=0 ---
-% Using fixed solver to avoid interpolation because default ode45 expects a
-% continuous signal and our input data isn't continuous
+%% Model configurations
+% Pflag=0 and Vtrfl=0 and Freqflag=0
 function sol = fixed_step_solver(Fun, x0, t)
     N = length(t);
-    dt = t(2) - t(1);  % assume uniform
+    dt = t(2) - t(1); 
     nx = length(x0);
 
     X = zeros(nx, N);

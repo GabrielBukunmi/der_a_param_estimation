@@ -1,5 +1,3 @@
-clc;
-close all;
 
 % Parameters
 L = -1;
