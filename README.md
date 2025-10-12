@@ -23,8 +23,8 @@ This framework provides a **practical, measurement-driven solution for DER model
 ## Prerequisites & Installation
 Clone the repository:
 ```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/GabrielBukunmi/der_a_param_estimation
+cd der_a_param_estimation
 ```
 
 ### Requirements
@@ -39,7 +39,8 @@ All scripts are self-contained. No additional dependencies are required.
 ## Repository Structure
 ```
 ├── main.m              # Runs experiments and reproduces paper figures
-├── der_a.m             # DER_A implementation and P/Q comparison
+├── der_a.m             # DER_A implementation and P/Q comparison using parameters obtained from case1
+├── der_a2.m             # DER_A implementation using parameters obtained from case 2
 ├── PLOTSSF.m           # Plotting utility for smooth saturation and deadband functions
 │
 ├── util/               # Helper functions and utilities
