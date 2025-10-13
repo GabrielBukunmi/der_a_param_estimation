@@ -9,13 +9,12 @@
 ## Overview
 This repository provides the MATLAB/Simulink implementation used in our paper on observability and parameter estimation of the **aggregate distributed energy resources (der_a) model**.  
 
-The work demonstrates:  
+This work demonstrates:  
 - A **Lie derivative-based observability analysis** to identify which der_a parameters are structurally observable from available measurements.  
-- A comparison of **voltage + power measurements vs. current-based measurements**, showing that the {V, P, Q} set provides stronger observability.  
+- A comparison of two different measurement sets, showing that the **{voltage, real power, reactive power} measurement set** provides stronger observability.  
 - **Extended Kalman Filter (EKF)** and **Unscented Kalman Filter (UKF)** implementations to estimate a subset of der_a parameters, with validation against an IEEE 34-node test feeder with distributed energy resources.
-- Reproducible plots comparing **measured, NERC default, and estimated P/Q trajectories**.  
 
-This framework provides a **practical, measurement-driven solution for DER model calibration**, ensuring that dynamic simulations accurately reflect the collective behavior of real inverter-based resources.  
+This framework provides a **practical, measurement-driven solution for calibration of the der_a model**, ensuring that dynamic simulations accurately reflect the collective behavior of inverter-based resources.
 
 ---
 
