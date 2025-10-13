@@ -44,13 +44,13 @@ All scripts are self-contained. No additional dependencies are required.
 ├── util/               # Helper functions and utilities
 ├── simulink/           # Testbed (IEEE 34-bus feeder with distributed energy resources)
 │
-├── Case1/              # EKF and UKF parameter estimation (Case 1: Pflag =0, Vtripflag=0 and Freqflag=0)
+├── Case1/              # EKF/UKF parameter estimation (Case 1: Pflag =0, Vtripflag=0 and Freqflag=0)
 │   ├── EKF_DER_A_Case1.m
 │   ├── UKF_DER_A_Case1.m
 │   ├── plot_EKF_UKF_Case1.m
 │   └── Case1_utilities/
 │
-├── Case2/              # EKF and UKF parameter estimation (Case 2: Pflag =1, Vtripflag=0 and Freqflag=1)
+├── Case2/              # EKF/UKF parameter estimation (Case 2: Pflag =1, Vtripflag=0 and Freqflag=1)
 │   ├── EKF_Case2.m
 │   ├── UKF_Case2.m
 │   ├── plot_EKF_UKF_Case2.m
