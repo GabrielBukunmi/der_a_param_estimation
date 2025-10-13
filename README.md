@@ -42,7 +42,7 @@ All scripts are self-contained. No additional dependencies are required.
 ├── PLOTSSF.m           # Plotting utility for smooth saturation and deadband functions
 │
 ├── util/               # Helper functions and utilities
-├── simulink/           # Testbed (IEEE 34-bus feeder with distributed energy resources)
+├── simulink/           # Testbed (IEEE 34-node feeder with distributed energy resources)
 │
 ├── Case1/              # EKF/UKF parameter estimation (Case 1: Pflag =0, Vtripflag=0 and Freqflag=0)
 │   ├── EKF_DER_A_Case1.m
