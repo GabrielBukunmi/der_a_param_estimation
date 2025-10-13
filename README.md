@@ -37,8 +37,8 @@ All scripts are self-contained. No additional dependencies are required.
 ## Repository Structure
 ```
 ├── main.m              # Runs experiments and reproduces paper figures
-├── der_a.m             # der_a implementation and P/Q comparison using parameters obtained from case1
-├── der_a2.m            # der_a implementation using parameters obtained from case 2
+├── der_a.m             # der_a implementation and P/Q comparison using parameters obtained from Case 1
+├── der_a2.m            # der_a implementation using parameters obtained from Case 2
 ├── PLOTSSF.m           # Plotting utility for smooth saturation and deadband functions
 │
 ├── util/               # Helper functions and utilities
