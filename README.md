@@ -72,8 +72,8 @@ All scripts are self-contained. No additional dependencies are required.
    ```
    This will:  
    - Run EKF and UKF estimators  
-   - Compare measured, NERC default, and estimated P/Q  
-   - Display figures for estimation and observability  
+   - Compare results from the calibrated model against those obtained by using NERC default parameter values without calibration
+   - Display figures for estimation and observability
 
 ---
 
