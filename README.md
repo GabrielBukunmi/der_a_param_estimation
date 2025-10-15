@@ -2,7 +2,7 @@
 
 **Repository accompanying:**
 
-"Observability and parameter estimation of a generic model for aggregated distributed energy resources" by Bukunmi Gabriel Odunlami and Marcos Netto ([arXiv link – to be added])  
+"Observability and parameter estimation of a generic model for aggregated distributed energy resources" by Bukunmi Gabriel Odunlami and Marcos Netto ([arXiv link](https://arxiv.org/abs/2510.10892))
 
 ---
 
@@ -89,7 +89,7 @@ If you use this repository, please cite:
 @article{Odunlami2025,
   title={Observability and parameter estimation of a generic model for aggregated distributed energy resources},
   author={Bukunmi G. Odunlami and Marcos Netto},
-  journal={preprint, arXiv:XXXX.XXXXX},
+  journal={preprint, arXiv:2510.10892},
   year={2025}
 }
 ```
